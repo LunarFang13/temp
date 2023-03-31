@@ -115,7 +115,7 @@ app.get("/api/guides/:city", async (req,res) => {
         console.log(req.session.id)
         const city = req.params.city;
         const guides = await Guide.find({ city: city });
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.status(200).send(guides);
       } catch (err) {
