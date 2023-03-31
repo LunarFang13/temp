@@ -16,7 +16,19 @@ app.use(
       methods: ["GET", "POST"],
       credentials: true,
     })
-  );W
+  );
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  // Allow preflight requests
+  if ('OPTIONS' == req.method) {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -39,24 +51,22 @@ app.get("/", (req,res) => {
 })
 
 
-app.post("/api/login", async (req,res) => {
+app.get("/api/login", async (req,res) => {
     req.session.isAuth = true;
-    console.log(req.body)
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    const user = await User.findOne({mail: req.body['email-address']});
+    console.log(req.query.email)
+    const user = await User.findOne({mail: req.query.email});
     if (!user){
         return res.status(404).json({message:"User does not exist"})
     }
 
 
-    const pwCheck = await bcrypt.compare(req.body.password, user.pw);
+    const pwCheck = await bcrypt.compare(req.query.password, user.pw);
 
     if(!pwCheck){
         return res.status(401).json({message: 'pw is wrong'})
     }
 
-    
+
     req.session.user = user.uname;
     console.log(req.session.id)
     console.log(req.session.user)
