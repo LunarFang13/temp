@@ -31,6 +31,8 @@ mongoose.connect(mongoString);
 const database = mongoose.connection;
 
 app.get("/", (req,res) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     req.session.isAuth = true;
     console.log(req.session.id)
     res.send("hello")
@@ -40,7 +42,7 @@ app.get("/", (req,res) => {
 app.post("/api/login", async (req,res) => {
     req.session.isAuth = true;
     console.log(req.body)
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost/");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
     res.setHeader("Access-Control-Allow-Credentials", "true");
     const user = await User.findOne({mail: req.body['email-address']});
     if (!user){
@@ -64,6 +66,8 @@ app.post("/api/login", async (req,res) => {
 
 app.post("/api/addguide", async (req,res) => {
     try {
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
         const newGuide = new Guide(req.body);
         console.log(newGuide);
         const savedGuide = await newGuide.save();
@@ -75,6 +79,8 @@ app.post("/api/addguide", async (req,res) => {
 
 app.post("/api/adduser", async (req,res) => {
     try {
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
         const hashedPw = await bcrypt.hash(req.body.password,12);
         const temp = {
           uname: req.body.username,
@@ -98,6 +104,8 @@ app.post("/api/logout", async (req,res) => {
 
 
 app.get("/api/guide/:id", async (req,res) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     const guideId = req.params.id;
     Guide.findOne({ id: req.params.id })
     .exec()
@@ -115,7 +123,7 @@ app.get("/api/guides/:city", async (req,res) => {
         console.log(req.session.id)
         const city = req.params.city;
         const guides = await Guide.find({ city: city });
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost");
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.status(200).send(guides);
       } catch (err) {
@@ -124,12 +132,3 @@ app.get("/api/guides/:city", async (req,res) => {
 })
 
 app.listen(5000,console.log("server running"));
-ngrok.connect({
-  proto : 'http',
-  addr : process.env.PORT,
-}, (err, url) => {
-  if (err) {
-      console.error('Error while connecting Ngrok',err);
-      return new Error('Ngrok Failed');
-  }
-});
