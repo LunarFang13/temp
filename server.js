@@ -31,7 +31,7 @@ mongoose.connect(mongoString);
 const database = mongoose.connection;
 
 app.get("/", (req,res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost");
     res.setHeader("Access-Control-Allow-Credentials", "true");
     req.session.isAuth = true;
     console.log(req.session.id)
@@ -42,7 +42,7 @@ app.get("/", (req,res) => {
 app.post("/api/login", async (req,res) => {
     req.session.isAuth = true;
     console.log(req.body)
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost");
     res.setHeader("Access-Control-Allow-Credentials", "true");
     const user = await User.findOne({mail: req.body['email-address']});
     if (!user){
@@ -66,7 +66,7 @@ app.post("/api/login", async (req,res) => {
 
 app.post("/api/addguide", async (req,res) => {
     try {
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         const newGuide = new Guide(req.body);
         console.log(newGuide);
@@ -79,7 +79,7 @@ app.post("/api/addguide", async (req,res) => {
 
 app.post("/api/adduser", async (req,res) => {
     try {
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         const hashedPw = await bcrypt.hash(req.body.password,12);
         const temp = {
@@ -104,7 +104,7 @@ app.post("/api/logout", async (req,res) => {
 
 
 app.get("/api/guide/:id", async (req,res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost");
     res.setHeader("Access-Control-Allow-Credentials", "true");
     const guideId = req.params.id;
     Guide.findOne({ id: req.params.id })
@@ -123,7 +123,7 @@ app.get("/api/guides/:city", async (req,res) => {
         console.log(req.session.id)
         const city = req.params.city;
         const guides = await Guide.find({ city: city });
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000, http://localhost");
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.status(200).send(guides);
       } catch (err) {
