@@ -40,6 +40,8 @@ app.get("/", (req,res) => {
 app.post("/api/login", async (req,res) => {
     req.session.isAuth = true;
     console.log(req.body)
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost/");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     const user = await User.findOne({mail: req.body['email-address']});
     if (!user){
         return res.status(404).json({message:"User does not exist"})
@@ -52,7 +54,7 @@ app.post("/api/login", async (req,res) => {
         return res.status(401).json({message: 'pw is wrong'})
     }
 
-
+    
     req.session.user = user.uname;
     console.log(req.session.id)
     console.log(req.session.user)
